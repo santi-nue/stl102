@@ -1,0 +1,28 @@
+name: Build and Export Windows Docker Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        shell: powershell
+        run: |
+          docker build -t my-windows-image:latest .
+
+      - name: Save Docker image as tar archive
+        shell: powershell
+        run: |
+          docker save -o my-windows-image.tar my-windows-image:latest
+
+      - name: Upload image archive as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-windows-image
+          path: my-windows-image.tar
